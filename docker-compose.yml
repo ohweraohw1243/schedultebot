@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: schedule_bot
+    command: python bot.py
+    env_file:
+      - .env
+    volumes:
+      - ./schedule.db:/app/schedule.db
+      - ./admin_id.txt:/app/admin_id.txt
+    restart: always
+    network_mode: "host"
+
+  api:
+    build: .
+    container_name: schedule_api
+    command: uvicorn api:app --host 0.0.0.0 --port 8000
+    volumes:
+      - ./schedule.db:/app/schedule.db
+    ports:
+      - "8000:8000"
+    restart: always
